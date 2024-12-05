@@ -1,0 +1,87 @@
+services:
+  - type: web
+    name: remenby-api
+    env: docker
+    region: europe-west1
+    dockerCommand: ./api
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: DB_HOST
+        fromService:
+          type: pserv
+          name: remenby-db
+          property: host
+      - key: DB_PORT
+        value: 5432
+      - key: DB_NAME
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: CHROMA_HOST
+        fromService:
+          type: pserv
+          name: remenby-chroma
+          property: host
+
+  - type: worker
+    name: remenby-email-fetcher
+    env: docker
+    region: ohio
+    dockerCommand: ./email-fetcher
+    envVars:
+      - key: EMAIL_ADDRESS
+        sync: false
+      - key: EMAIL_PASSWORD
+        sync: false
+      - key: IMAP_SERVER
+        sync: false
+      - key: IMAP_PORT
+        sync: false
+      - key: FETCH_INTERVAL
+        sync: false
+      - key: DB_HOST
+        fromService:
+          type: pserv
+          name: remenby-db
+          property: host
+      - key: DB_NAME
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+
+  - type: pserv
+    name: remenby-db
+    env: docker
+    region: ohio
+    disk:
+      name: data
+      mountPath: /var/lib/postgresql/data
+      sizeGB: 10
+    dockerCommand: postgres:14-alpine
+    envVars:
+      - key: POSTGRES_DB
+        sync: false
+      - key: POSTGRES_USER
+        sync: false
+      - key: POSTGRES_PASSWORD
+        sync: false
+
+  - type: pserv
+    name: remenby-chroma
+    env: docker
+    region: ohio
+    disk:
+      name: chroma-data
+      mountPath: /chroma/chroma
+      sizeGB: 10
+    dockerCommand: chromadb/chroma:latest
+    envVars:
+      - key: ALLOW_RESET
+        value: "true"
+      - key: ANONYMIZED_TELEMETRY
+        value: "false"
