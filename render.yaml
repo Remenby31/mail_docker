@@ -1,9 +1,9 @@
 services:
   - type: web
     name: remenby-api
-    env: docker
-    region: europe-west1
-    dockerCommand: ./api
+    env: image
+    image:
+      url: remenby/api:latest
     envVars:
       - key: OPENAI_API_KEY
         sync: false
@@ -28,9 +28,9 @@ services:
 
   - type: worker
     name: remenby-email-fetcher
-    env: docker
-    region: ohio
-    dockerCommand: ./email-fetcher
+    env: image
+    image:
+      url: remenby/email-fetcher:latest
     envVars:
       - key: EMAIL_ADDRESS
         sync: false
@@ -56,13 +56,13 @@ services:
 
   - type: pserv
     name: remenby-db
-    env: docker
-    region: ohio
+    env: image
+    image:
+      url: postgres:14-alpine
     disk:
       name: data
       mountPath: /var/lib/postgresql/data
       sizeGB: 10
-    dockerCommand: postgres:14-alpine
     envVars:
       - key: POSTGRES_DB
         sync: false
@@ -73,13 +73,13 @@ services:
 
   - type: pserv
     name: remenby-chroma
-    env: docker
-    region: ohio
+    env: image
+    image:
+      url: chromadb/chroma:latest
     disk:
       name: chroma-data
       mountPath: /chroma/chroma
       sizeGB: 10
-    dockerCommand: chromadb/chroma:latest
     envVars:
       - key: ALLOW_RESET
         value: "true"
