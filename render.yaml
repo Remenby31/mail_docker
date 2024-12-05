@@ -1,9 +1,9 @@
 services:
   - type: web
     name: remenby-api
-    env: image
-    image:
-      url: remenby/api:latest
+    plan: starter
+    runtime: image
+    image: remenby/api:latest
     envVars:
       - key: OPENAI_API_KEY
         sync: false
@@ -28,9 +28,9 @@ services:
 
   - type: worker
     name: remenby-email-fetcher
-    env: image
-    image:
-      url: remenby/email-fetcher:latest
+    plan: starter
+    runtime: image
+    image: remenby/email-fetcher:latest
     envVars:
       - key: EMAIL_ADDRESS
         sync: false
@@ -56,9 +56,8 @@ services:
 
   - type: pserv
     name: remenby-db
-    env: image
-    image:
-      url: postgres:14-alpine
+    plan: starter
+    image: postgres:14-alpine
     disk:
       name: data
       mountPath: /var/lib/postgresql/data
@@ -73,9 +72,8 @@ services:
 
   - type: pserv
     name: remenby-chroma
-    env: image
-    image:
-      url: chromadb/chroma:latest
+    plan: starter
+    image: chromadb/chroma:latest
     disk:
       name: chroma-data
       mountPath: /chroma/chroma
