@@ -21,7 +21,7 @@ class EmailAnalyzer:
         self.embeddings = OpenAIEmbeddings()
         self.chroma_client = None
         self.collection = None
-        self.llm = ChatOpenAI(model="gpt-4-turbo-preview")
+        self.llm = ChatOpenAI(model="gpt-4o-mini")
         
         # Database configuration
         self.db_config = {
